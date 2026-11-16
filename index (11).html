@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Boardroom Trial — Team Red Line</title>
+<style>
+:root{--bg:#0B0C10;--s2:#17191F;--s3:#20232B;--red:#C92532;--hot:#F04452;--gold:#D7B16A;--ink:#F3F0E9;--mute:#A6A8B1;--ok:#4CAF85;--warn:#E7A94B;--hd:"Bahnschrift SemiCondensed","Arial Narrow","Roboto Condensed","Franklin Gothic Medium",Impact,sans-serif;--bd:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--bd)}
+body{background:radial-gradient(ellipse at 20% 0,#1a1013 0,var(--bg) 60%);transition:background 1.2s}
+body[data-mood=bad]{background:radial-gradient(ellipse at 20% 0,#3a0d13 0,var(--bg) 65%)}
+body[data-mood=good]{background:radial-gradient(ellipse at 20% 0,#2a2412 0,var(--bg) 65%)}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
+#app{height:100%;display:flex;flex-direction:column;padding:clamp(14px,2.2vw,36px) clamp(18px,4vw,72px)}
+#top{display:flex;justify-content:space-between;align-items:center;font-size:clamp(11px,1vw,15px);color:var(--mute);min-height:24px}
+#top .fic{border:1px solid #3a3d47;padding:2px 8px;letter-spacing:.08em}
+#prog{display:flex;gap:6px;align-items:center}#prog i{width:clamp(14px,1.6vw,26px);height:3px;background:#2d3039}#prog i.on{background:var(--red)}
+#top button{margin-left:12px}
+#stage{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:clamp(8px,1.6vh,20px);animation:in .5s ease}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h1,h2,.hd{font-family:var(--hd);font-weight:800;text-transform:uppercase;line-height:.95;margin:0;letter-spacing:.01em}
+.h1{font-size:clamp(34px,7.4vw,128px)}.h2{font-size:clamp(28px,4.6vw,76px)}.h3{font-size:clamp(20px,2.4vw,40px)}
+.mute{color:var(--mute)}.p{font-size:clamp(15px,1.7vw,28px);line-height:1.4;max-width:46ch;margin:0}
+.rule{height:2px;width:clamp(60px,9vw,140px);background:var(--red)}
+.tag{font-size:clamp(12px,1.2vw,19px);color:var(--gold);letter-spacing:.14em}
+.msg{border-left:3px solid var(--red);background:var(--s2);padding:clamp(8px,1.4vh,16px) clamp(12px,1.6vw,24px);max-width:56ch;animation:in .6s .2s both}
+.msg small{color:var(--mute);letter-spacing:.1em;font-size:clamp(11px,1vw,15px)}.msg div{font-size:clamp(17px,2vw,32px);margin-top:4px}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1.4vw,22px)}
+.opt{all:unset;box-sizing:border-box;cursor:pointer;background:var(--s2);border:1px solid #2c2f39;border-top:3px solid var(--red);padding:clamp(10px,1.6vw,26px);display:flex;flex-direction:column;gap:8px;min-height:clamp(120px,22vh,260px);transition:transform .15s,background .15s,border-color .15s}
+.opt:hover,.opt:focus-visible{background:var(--s3);transform:translateY(-3px);border-color:var(--gold)}
+.opt b{font-family:var(--hd);font-size:clamp(18px,2.3vw,38px);text-transform:uppercase;line-height:1}.opt span{color:var(--mute);font-size:clamp(13px,1.35vw,22px);line-height:1.35}
+.opt kbd{color:var(--gold);font-family:var(--hd);font-size:clamp(14px,1.3vw,22px)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.cta{background:var(--red);color:#fff;border:0;padding:clamp(12px,1.6vh,20px) clamp(22px,3vw,48px);font-family:var(--hd);font-weight:800;font-size:clamp(18px,2vw,32px);letter-spacing:.06em;text-transform:uppercase;align-self:flex-start;transition:background .15s,transform .15s}
+.cta:hover{background:var(--hot);transform:translateY(-2px)}
+.sm{background:none;border:1px solid #3a3d47;color:var(--mute);padding:4px 10px;font-size:clamp(11px,1vw,14px)}.sm:hover{color:var(--ink);border-color:var(--gold)}
+.open{display:inline-block;color:var(--hot);animation:pulse 1.4s infinite;letter-spacing:.16em}
+@keyframes pulse{50%{opacity:.35}}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:var(--s2);border:1px solid #2c2f39;padding:3px 10px;font-size:clamp(11px,1vw,15px);color:var(--mute)}
+.ul{position:relative;display:inline-block;padding-bottom:.18em}.ul:after{content:"";position:absolute;left:0;bottom:0;height:5px;width:100%;background:var(--red);transform-origin:left;animation:grow 1s .3s both}.gold .ul:after{background:var(--gold)}
+@keyframes grow{from{transform:scaleX(0)}}
+.tl{display:grid;gap:8px}.tl div{display:grid;grid-template-columns:clamp(110px,14vw,220px) 1fr;gap:14px;background:var(--s2);border-left:3px solid var(--red);padding:clamp(8px,1.4vh,16px) 16px;font-size:clamp(14px,1.6vw,26px);animation:in .5s both}
+.tl em{font-style:normal;color:var(--gold);font-family:var(--hd);text-transform:uppercase}.tl span{color:var(--mute);display:block;font-size:.8em}
+.fx{opacity:0;animation:in .9s both}
+#dash{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,1.6vw,26px);padding-top:10px;border-top:1px solid #2c2f39}
+#dash.off{display:none}
+.m small{display:flex;justify-content:space-between;font-size:clamp(11px,1.1vw,17px);color:var(--mute);letter-spacing:.06em}
+.m .bar{height:clamp(8px,1.3vh,14px);background:#252830;margin-top:5px;overflow:hidden}.m .bar i{display:block;height:100%;width:50%;background:var(--warn);transition:width 1.2s cubic-bezier(.2,.8,.2,1),background .8s}
+.m .d{font-weight:700;opacity:0;transition:opacity .4s}.m .d.s{opacity:1}.d.up{color:var(--ok)}.d.dn{color:var(--hot)}
+#cap{font-size:clamp(10px,.9vw,13px);color:#6e717c;margin-top:4px}
+#pp{position:fixed;right:12px;bottom:12px;width:min(340px,92vw);max-height:84vh;overflow:auto;background:#12141a;border:1px solid var(--gold);padding:14px;display:none;z-index:9;font-size:14px}
+#pp.on{display:block}#pp h3{margin:0 0 8px;font-family:var(--hd);color:var(--gold)}
+#pp .g{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}#pp input[type=number]{width:60px;background:var(--s3);border:1px solid #3a3d47;color:var(--ink);padding:4px}
+#notes{background:var(--s2);padding:8px;margin-top:8px;color:var(--mute);font-style:italic;line-height:1.4}
+#cd{position:fixed;inset:0;display:none;place-items:center;font-family:var(--hd);font-size:30vw;color:var(--hot);background:rgba(11,12,16,.85);z-index:8}
+.sky{position:absolute;left:0;right:0;bottom:0;height:42%;opacity:.9;z-index:-1}
+.hid{opacity:0;transform:translateY(8px);transition:opacity .8s,transform .8s}.hid.show{opacity:1;transform:none}
+.glitch.show{animation:gl .5s}@keyframes gl{20%{transform:translateX(-4px);color:var(--hot)}40%{transform:translateX(5px)}60%{transform:none}}
+.cur{display:inline-block;width:.5em;height:.9em;background:var(--ink);vertical-align:-.08em;animation:pulse 1s infinite}
+@media(max-width:820px){.opts{grid-template-columns:1fr}#dash{grid-template-columns:repeat(2,1fr)}.opt{min-height:0}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style></head><body data-mood="">
+<div id="app">
+<div id="top"><span class="fic">Fictional simulation</span><span id="prog" aria-label="Progress"></span>
+<span><button class="sm" data-act="snd" id="snd" aria-pressed="false">Sound off</button><button class="sm" data-act="pp" aria-label="Presenter panel">P</button></span></div>
+<main id="stage" aria-live="polite"></main>
+<section id="dash" class="off" aria-label="Executive dashboard"></section><div id="cap" class="mute"></div>
+</div>
+<aside id="pp" aria-label="Presenter controls"><h3>Presenter</h3>
+<div>Elapsed <b id="el">0:00</b> · Mode <b id="md">strict</b></div>
+<div class="g"><button class="sm" data-act="prev">◀ Back</button><button class="sm" data-act="next">Next ▶</button><button class="sm" data-act="skip">Skip intro</button><button class="sm" data-act="mode">Strict / Extended</button><button class="sm" data-act="fs">Fullscreen</button><button class="sm" data-act="snd">Sound</button><button class="sm" data-act="cd">Countdown 5s</button><button class="sm" data-act="rst">Restart</button><button class="sm" data-act="rdec">Reset decisions</button><button class="sm" data-act="nt">Notes</button></div>
+<div><b>Manual vote entry</b> (current round)<div class="g">A <input type="number" min="0" id="vA"> B <input type="number" min="0" id="vB"> C <input type="number" min="0" id="vC"></div><button class="sm" data-act="vote">Apply majority</button> <button class="sm" data-act="vclr">Clear</button><div id="vmsg" class="mute"></div></div>
+<div id="notes" hidden></div>
+<p class="mute" style="font-size:12px">Keys: Enter advance · 1/2/3 choose · P panel · F fullscreen · M sound · R restart · Esc close</p></aside>
+<div id="cd" aria-hidden="true"></div>
+<script>
+'use strict';
+/* ===== GAME_CONFIG / DECISION_DATA ===== */
+const ORDER=['open','alert','r0','c0','r1','c1','r2','c2','twist','case','verdict','final','close'];
+const L=['A','B','C'],MN=['PROFITABILITY','CUSTOMER SAFETY','EMPLOYEE PROTECTION','PUBLIC TRUST']; // metric order: P,S,E,T
+const ROUNDS=[
+{who:'MANAGEMENT',title:'THE BOARD HAS BEEN NOTIFIED.',story:'A product batch has failed an internal safety check. A shipment has already been distributed. A recall could cost millions.',msg:['CEO · CONFIDENTIAL','We cannot afford another delay.'],q:'WHAT SHOULD MANAGEMENT DO?',
+ o:[['ORDER AN IMMEDIATE RECALL','Prioritize consumer safety, notify relevant parties, and begin an investigation.'],['CONDUCT A QUIET INTERNAL REVIEW','Investigate urgently while withholding public communication. Exposure may continue.'],['PRIORITIZE BUSINESS CONTINUITY','Keep operations moving and minimize disruption despite unresolved safety concerns.']]},
+{who:'EMPLOYEES',title:'THE EMPLOYEE KNOWS.',story:'Maya has seen the quality-control report. She knows products may be unsafe. She also knows speaking up could threaten her career.',msg:['MANAGER · INTERNAL','Please handle this internally. We need everyone focused on delivery.'],q:'WHAT SHOULD MAYA DO?',
+ o:[['FILE A FORMAL SAFETY REPORT','Escalate the concern through documented channels.'],['CHALLENGE MANAGEMENT DIRECTLY','Demand immediate action from leadership and request written confirmation.'],['REMAIN SILENT','Avoid confrontation and preserve job security while the risk stays unresolved.']]},
+{who:'CUSTOMERS',title:'THE PUBLIC IS ASKING QUESTIONS.',story:'Concerns about product safety are circulating. Customers are unsure whether the company has been transparent.',msg:['CUSTOMER REPRESENTATIVE','Do we actually know what the company has done?'],q:'WHAT SHOULD CUSTOMERS DEMAND?',
+ o:[['FULL DISCLOSURE AND ACCOUNTABILITY','Demand transparent information, corrective action, and an independent investigation.'],['WAIT FOR VERIFIED INFORMATION','Seek reliable evidence and avoid unsupported claims, while taking prompt safety precautions.'],['ACCEPT THE COMPANY\u2019S REASSURANCE','Trust the statement without demanding additional evidence.']]}];
+// Transparent rules: deltas are [Profit, Safety, Employee, Trust], fictional gameplay points.
+const D0=[[-25,25,5,15],[-5,-10,-10,-15],[15,-30,-15,-25]];
+const D1=[[[-3,5,15,5],[0,3,8,2],[2,-3,-8,-5]],[[-8,15,0,8],[-5,10,-8,3],[3,-12,-12,-8]],[[-12,18,-15,10],[-8,10,-18,3],[5,-15,-10,-10]]];
+const D2=[[[-2,5,3,12],[3,0,0,3],[8,-3,0,-3]],[[-10,15,5,12],[2,-5,-3,-5],[8,-12,-5,-10]],[[-15,18,-5,6],[5,-15,-3,-10],[10,-20,-5,-15]]]; // by context: 0 open,1 pressured,2 hidden
+const ctx=c=>c[0]===0?0:(c[1]!==2?1:2);
+const C0=[['RECALL ORDERED. COST ACCEPTED.','Revenue takes a hit. Customers are warned.'],['QUIET REVIEW. EXPOSURE CONTINUES.','Costs stay low. Risk stays out of sight.'],['REVENUE PROTECTED. CUSTOMER EXPOSURE CONTINUES.','The known hazard stays on shelves.']];
+const C1=[[['THE REPORT BACKS THE RECALL.','Maya documents what leadership already acted on.'],['LEADERSHIP IS PRESSED FOR PROOF.','Written confirmation strengthens the record. Friction rises.'],['THE RECALL WENT AHEAD. THE SILENCE STILL COUNTS.','Safety moved without her. Concerns stay unspoken.']],
+[['THE REPORT BREAKS THE QUIET.','Documentation forces the review into the open.'],['A DEMAND, A DEADLINE, A TARGET.','Leadership is cornered. So is Maya.'],['THE RISK STAYS INSIDE THE BUILDING.','Almost no one outside knows. Exposure continues.']],
+[['THE REPORT WAS FILED. THE PRESSURE REMAINS.','Filed against a decision to keep moving. Retaliation risk is high.'],['A DIRECT CLASH WITH LEADERSHIP.','Written confirmation is refused. Maya is exposed.'],['NOBODY SPOKE. THE BATCH KEPT MOVING.','The system rewarded silence.']]];
+const C2=[[['THE COMPANY CHOSE TRANSPARENCY.','Demands meet an organization already responding.'],['VERIFICATION CONFIRMS THE RESPONSE.','Patience costs little when the facts are shared.'],['TRUST HOLDS. FOR NOW.','Reassurance was earned here, but nobody tested it.']],
+[['THE PUBLIC DEMANDS ANSWERS.','Pressure accelerates corrective action.'],['CAUTION COSTS TIME.','Waiting for proof while risk remains has a price.'],['REASSURANCE WITHOUT EVIDENCE.','Concerns were already surfacing. Accepting them early adds risk.']],
+[['THE DEMAND BREAKS THE SILENCE.','Disclosure arrives late, under pressure, and at a high cost.'],['WAITING WHILE RISK REMAINS.','Without insiders speaking, proof may never come.'],['THE REASSURANCE WAS NEVER TESTED.','No one inside spoke. No one outside asked.']]];
+const VERD={
+ETHICAL:['ETHICAL LEADERSHIP','The organization prioritized safety, transparency, and accountability. The business paid a short-term price to do it.'],
+FRAGILE:['FRAGILE INTEGRITY','Some ethical choices were made, but protection or accountability stayed weak. The right outcome still depended on pressure and luck.'],
+SYSTEMIC:['SYSTEMIC ETHICAL FAILURE','Business performance was placed above safety and responsibility. Every step made the wrong choice easier than the right one.'],
+DAMAGED:['CRISIS CONTAINED, TRUST DAMAGED','Immediate harm may have been reduced, but earlier choices weakened public confidence. Safety recovered faster than credibility.']};
+const NOTES={open:'Tonight, you are not students. You are the board of directors. A safety crisis has reached your desk. Every decision you make will affect someone\u2019s future.',r0:'Your company is losing money. But customers may be at risk. What comes first?',r1:'Now imagine you are Maya. Your job is on the line. Would you speak up?',r2:'You trusted this company. Now you have doubts. What would you demand?',case:'You made three decisions. But did you build an ethical company, or simply protect its numbers?',final:'This is why ethics cannot depend on individual courage alone. Organizations must build systems that protect ethical decisions.',twist:'Individual choices matter, leadership decisions matter, and incentives decide which choices get easier.'};
+/* ===== GAME_STATE (single source of truth) ===== */
+const ST={i:0,mode:'strict',choices:[],votes:{},resp:null,twist:false,sound:false,notes:false,t0:null,lock:0,timers:[]};
+/* ===== CONSEQUENCE_ENGINE (pure) ===== */
+const clamp=x=>Math.max(0,Math.min(100,x));
+function deltaFor(r,c){return r===0?D0[c[0]]:r===1?D1[c[0]][c[1]]:D2[ctx(c)][c[2]]}
+function metrics(n,c){c=c||ST.choices;let m=[50,50,50,50];for(let r=0;r<n&&r<3;r++){if(c[r]==null)break;const d=deltaFor(r,c);m=m.map((x,k)=>clamp(x+d[k]))}return m}
+/* ===== VERDICT_ENGINE (pure, deterministic) ===== */
+function verdictOf(m){const[P,S,E,T]=m;
+ if(S>=70&&T>=75&&E>=60)return'ETHICAL';
+ if(S>=50&&T<50)return'DAMAGED';
+ if(S<=35||S+T+E<115)return'SYSTEMIC';
+ return'FRAGILE'}
+const lvl=v=>v<25?'CRITICAL':v<45?'LOW':v<60?'MODERATE':v<80?'STRONG':'VERY STRONG';
+/* ===== AUDIO_CONTROLLER ===== */
+let AC=null;
+function tone(f,d,t,g,at){if(!ST.sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),v=AC.createGain(),s=AC.currentTime+(at||0);o.type=t||'sine';o.frequency.value=f;v.gain.setValueAtTime(0,s);v.gain.linearRampToValueAtTime(g||.05,s+.04);v.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(v);v.connect(AC.destination);o.start(s);o.stop(s+d+.05)}catch(e){}}
+const SFX={notify:()=>{tone(660,.25);tone(880,.3,'sine',.04,.12)},alert:()=>{tone(110,.6,'sawtooth',.04);tone(140,.6,'sine',.05,.3)},ok:()=>tone(520,.18,'triangle',.05),warn:()=>tone(90,.7,'sine',.07),impact:()=>{tone(55,1.2,'sine',.09);tone(110,.8,'triangle',.04)}};
+/* ===== UI_RENDERER ===== */
+const $=s=>document.querySelector(s),stage=$('#stage'),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const scr=()=>ORDER[ST.i];
+function skyline(){let b='',x=0,s=7;const r=()=>(s=(s*9301+49297)%233280)/233280;while(x<1000){const w=30+r()*50,h=40+r()*150;b+=`<rect x="${x}" y="${220-h}" width="${w}" height="${h}" fill="#0f1116"/>`;x+=w+4}
+ return`<svg class="sky" viewBox="0 0 1000 220" preserveAspectRatio="none" aria-hidden="true">${b}<rect x="612" y="96" width="9" height="12" fill="#E7C27A"><animate attributeName="opacity" values="1;.55;1" dur="3s" repeatCount="indefinite"/></rect></svg>`}
+function recap(r){const o=[];for(let k=0;k<r;k++)o.push(`<span class="chip">${ROUNDS[k].who}: ${ROUNDS[k].o[ST.choices[k]][0]}</span>`);return o.length?`<div class="chips">${o.join('')}</div>`:''}
+function votes(r){const v=ST.votes[r];return v?`<div class="chips"><span class="chip">Hands counted — A: ${v[0]} · B: ${v[1]} · C: ${v[2]}</span></div>`:''}
+const S={
+open:()=>`${skyline()}<div class="hd h3 hid" id="o1" style="color:var(--gold)">11:47 PM <span class="cur"></span></div>
+<div class="hid" id="o2"><div class="hd h2">Sehgal Group of Industries</div><div class="tag">CONFIDENTIAL INTERNAL ALERT</div></div>
+<div class="hid" id="o3"><span class="open">● CRISIS CLASSIFICATION: CRITICAL</span></div>
+<div class="msg hid glitch" id="o4"><small>INCOMING · QUALITY CONTROL</small><div>QUALITY CONTROL HAS FLAGGED A PRODUCT SAFETY ISSUE.</div></div>
+<div class="msg hid glitch" id="o5"><small>INCOMING</small><div>PRODUCTS MAY ALREADY BE IN CUSTOMER HANDS.</div></div>
+<div class="msg hid glitch" id="o6"><small>INCOMING · BOARD</small><div>THE BOARD MUST MAKE A DECISION.</div></div>
+<div class="hid" id="o7"><h1 class="h1">The Boardroom Trial</h1><p class="p" style="margin-top:12px">YOU ARE NOT WATCHING THE CRISIS. YOU ARE DECIDING WHAT HAPPENS NEXT.</p><p class="mute">Every decision has a price.</p></div>
+<div class="hid" id="o8"><button class="cta" data-act="next">Enter the boardroom</button> <button class="sm" data-act="skip">Skip</button></div>`,
+alert:()=>`<div class="tag">STAGE 1 · THE ALERT</div><h2 class="hd h1">11:47 PM.</h2><div class="rule"></div><p class="p">A batch failed an internal safety check. Product may already be with customers. You are the emergency ethics board: management, employees, and customers each decide in turn.</p><p class="mute p">When the numbers rise, who pays the cost?</p><button class="cta" data-act="next">Open the board vote</button>`,
+twist:()=>{const r=ST.resp;return`<div class="tag">BEFORE THE VERDICT</div><h2 class="hd h2">WHO SHOULD BE HELD RESPONSIBLE?</h2>
+<div class="opts">${['MAYA — THE EMPLOYEE','MANAGEMENT — THE DECISION MAKERS','THE SYSTEM — THE RULES AND INCENTIVES'].map((t,k)=>`<button class="opt" data-act="resp" data-v="${k}" ${r===k?'style="border-color:var(--gold)"':''}><kbd>${k+1}</kbd><b>${t}</b></button>`).join('')}</div>
+${r==null?'<button class="sm" data-act="next">Skip question</button>':`<div class="msg fx"><small>THE BOARD ANSWERED</small><div>ACCOUNTABILITY IS SHARED. BUT POWER AND RESPONSIBILITY ARE NOT ALWAYS DISTRIBUTED EQUALLY.</div></div><p class="mute p fx" style="animation-delay:.4s">Individual choices matter. Leadership decisions matter. Incentives shape which choices become easier or harder. Pressure explains a choice; it does not excuse it.</p><button class="cta" data-act="next">Continue investigation</button>`}`},
+case:()=>`<div class="tag">CASE FILE: 11:47 PM</div><h2 class="hd h2">BOARD DECISIONS RECORDED</h2><div class="tl">${[0,1,2].map(r=>{const h=[C0,C1[ST.choices[0]],C2[ctx(ST.choices)]][r][r===0?ST.choices[0]:ST.choices[r]][0];return`<div style="animation-delay:${r*.3}s"><em>${ROUNDS[r].who}</em><p style="margin:0">${ROUNDS[r].o[ST.choices[r]][0]}<span>${h}</span></p></div>`}).join('')}</div><button class="cta" data-act="next">Reveal verdict</button>`,
+verdict:()=>{const k=verdictOf(metrics(3)),v=VERD[k];return`<div class="tag">INVESTIGATION REPORT</div><h2 class="hd h1 ${k==='ETHICAL'?'gold':''}"><span class="ul">${v[0]}</span></h2><p class="p fx" style="animation-delay:.8s">${v[1]}</p><p class="mute fx" style="animation-delay:1.1s;max-width:60ch">Fictional simulation. It does not show that any real organization is ethical or unethical.</p><button class="cta fx" style="animation-delay:1.4s" data-act="next">Continue</button>`},
+final:()=>`<h2 class="hd h2 fx" style="animation-delay:.3s">THE BIGGEST RISK WAS NEVER ONE BAD EMPLOYEE.</h2><h2 class="hd h2 fx" style="animation-delay:2.2s;color:var(--hot)">IT WAS THE SYSTEM THAT MADE THE WRONG DECISION EASIER.</h2><div class="fx" style="animation-delay:4.4s"><h1 class="hd h1 gold"><span class="ul">ETHICS IS NOT DEAD.</span></h1><h2 class="hd h3" style="margin-top:12px">BUT DOING THE RIGHT THING SHOULD NOT REQUIRE HEROISM.</h2><div class="tag" style="margin:14px 0">TEAM RED LINE</div><button class="cta" data-act="next">Return to presentation</button></div>`,
+close:()=>`<div class="tag">ETHICS: DECLINING, NOT DEAD</div><h1 class="hd h1">TEAM RED LINE</h1><div class="rule"></div><p class="mute p">The Boardroom Trial · fictional simulation</p><button class="sm" data-act="rst" style="align-self:flex-start">Play again</button>`};
+function roundView(r){const R=ROUNDS[r];return`<div class="tag">STAGE ${r+2} · ${R.who} · <span class="open">BOARD VOTE NOW OPEN</span></div>${recap(r)}<h2 class="hd h2">${R.title}</h2><p class="p">${R.story}</p><div class="msg"><small>${R.msg[0]}</small><div>${R.msg[1]}</div></div><h3 class="hd h3">${R.q}</h3><div class="opts">${R.o.map((o,k)=>`<button class="opt" data-act="pick" data-v="${k}"><kbd>${L[k]} · ${k+1}</kbd><b>${o[0]}</b><span>${o[1]}</span></button>`).join('')}</div>${votes(r)}`}
+function consView(r){const c=ST.choices,h=r===0?C0[c[0]]:r===1?C1[c[0]][c[1]]:C2[ctx(c)][c[2]];const bad=metrics(r+1)[1]<metrics(r)[1];return`<div class="tag">CONSEQUENCE</div><h1 class="hd h1 ${bad?'':'gold'}"><span class="ul">${h[0]}</span></h1><p class="p fx" style="animation-delay:.7s">${h[1]}</p><div class="fx" style="animation-delay:1s"><button class="cta" data-act="next">Continue investigation</button>${r===2&&ST.mode==='strict'?' <button class="sm" data-act="twist">Ask: who is responsible?</button>':''}</div>`}
+function render(){clearT();const k=scr();let h;
+ if(/^r\d/.test(k))h=roundView(+k[1]);else if(/^c\d/.test(k))h=consView(+k[1]);else h=S[k]();
+ stage.style.animation='none';stage.offsetHeight;stage.style.animation='';stage.innerHTML=h;
+ $('#prog').innerHTML=ORDER.slice(1,-1).filter(x=>x!=='twist').map(x=>`<i class="${ORDER.indexOf(x)<=ST.i?'on':''}"></i>`).join('');
+ const showD=ST.i>=1&&ST.i<=ORDER.indexOf('verdict');$('#dash').classList.toggle('off',!showD);$('#cap').textContent=showD?'Fictional gameplay indicators from a neutral baseline. Not measured data.':'';
+ const n=/^r(\d)/.exec(k)?+k[1]:/^c(\d)/.exec(k)?+k[1]+1:k==='alert'?0:3;const m=metrics(n),prev=/^c/.test(k)?metrics(n-1):null;dash(m,prev);
+ document.body.dataset.mood=n>0?(m[1]<40?'bad':m[1]>=65?'good':''):'';
+ $('#md').textContent=ST.mode;const nt=$('#notes');nt.hidden=!ST.notes;nt.textContent=NOTES[k]||'';
+ if(k==='open')openSeq();else{const b=stage.querySelector('.cta,.opt');if(b&&!/^c\d/.test(k))b.blur()}
+ if(/^c/.test(k)){const d=m[1]-prev[1];(d<0?SFX.warn:SFX.ok)()}else if(k==='alert')SFX.alert();else if(/^r/.test(k))SFX.notify();else if(k==='verdict')SFX.impact()}
+function dash(m,prev){const d=$('#dash');if(!d.children.length)d.innerHTML=MN.map((n,k)=>`<div class="m"><small><span>${n}</span><span><span class="d"></span> <b class="lv"></b></span></small><div class="bar"><i></i></div></div>`).join('');
+ [...d.children].forEach((e,k)=>{const v=m[k],i=e.querySelector('i');i.style.width=Math.max(4,v)+'%';i.style.background=v<40?'var(--hot)':v>=65?'var(--ok)':'var(--warn)';e.querySelector('.lv').textContent=lvl(v);
+  const dd=e.querySelector('.d'),x=prev?m[k]-prev[k]:0;dd.className='d'+(x?(x>0?' up s':' dn s'):'');dd.textContent=x>0?'▲':x<0?'▼':''})}
+/* ===== ANIMATION_CONTROLLER ===== */
+function clearT(){ST.timers.forEach(clearTimeout);ST.timers=[]}
+function openSeq(){const T=[500,2200,3600,5000,6400,7800,9400,11000];T.forEach((t,k)=>ST.timers.push(setTimeout(()=>{const e=$('#o'+(k+1));if(e)e.classList.add('show');if(k===0)SFX.notify();if(k===2)SFX.alert();if(k>=3&&k<=5)SFX.warn();if(k===6)SFX.impact()},t)))}
+function skipIntro(){if(scr()!=='open')return;clearT();stage.querySelectorAll('.hid').forEach(e=>e.classList.add('show'))}
+/* ===== PRESENTER_CONTROLS / navigation ===== */
+function guard(){const n=Date.now();if(n-ST.lock<450)return false;ST.lock=n;return true}
+function go(d){let j=ST.i+d;while(ORDER[j]==='twist'&&ST.mode==='strict'&&!ST.twist)j+=d;j=Math.max(0,Math.min(ORDER.length-1,j));if(d>0){const k=scr();if(/^r\d/.test(k)&&ST.choices[+k[1]]==null)return}ST.i=j;if(j>=1&&!ST.t0)ST.t0=Date.now();render()}
+function pick(r,v){if(!guard())return;ST.choices[r]=v;ST.choices.length=r+1;if(r<2&&ST.votes[r+1])delete ST.votes[r+1];ST.resp=null;SFX.ok();go(1)}
+function restart(){ST.i=0;ST.choices=[];ST.votes={};ST.resp=null;ST.twist=false;ST.t0=null;render()}
+function askRestart(){if(confirm('Restart the whole game? All decisions will be cleared.'))restart()}
+function resetDec(){ST.choices=[];ST.votes={};ST.resp=null;ST.twist=false;if(ST.i>2)ST.i=2;render()}
+function curRound(){const m=/^[rc](\d)/.exec(scr());return m?+m[1]:null}
+function applyVote(){const r=curRound();const msg=$('#vmsg');if(r==null||/^c/.test(scr())&&false){msg.textContent='Open a round screen first.';return}
+ const v=['A','B','C'].map(x=>Math.max(0,parseInt($('#v'+x).value,10)||0));if(v.every(x=>x===0)){msg.textContent='Enter at least one vote count.';return}
+ ST.votes[r]=v;const mx=Math.max(...v),w=v.reduce((a,x,k)=>x===mx?a.concat(k):a,[]);
+ if(w.length>1){msg.textContent='Tie. Select the final board decision on screen.';if(/^r/.test(scr()))render();return}
+ msg.textContent='Majority: option '+L[w[0]];if(/^c/.test(scr()))go(-1);pick(r,w[0])}
+function setSound(on){ST.sound=on;const b=$('#snd');b.textContent=on?'Sound on':'Sound off';b.setAttribute('aria-pressed',on);if(on){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume()}catch(e){}SFX.ok()}}
+function fs(){try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){}}
+function countdown(){const c=$('#cd');let n=5;c.style.display='grid';c.textContent=n;const t=setInterval(()=>{n--;if(n<=0){clearInterval(t);c.style.display='none'}else{c.textContent=n;SFX.ok()}},1000)}
+const ACT={next:()=>{if(guard())go(1)},prev:()=>go(-1),skip:skipIntro,mode:()=>{ST.mode=ST.mode==='strict'?'extended':'strict';$('#md').textContent=ST.mode},fs,snd:()=>setSound(!ST.sound),cd:countdown,rst:askRestart,rdec:resetDec,nt:()=>{ST.notes=!ST.notes;render()},vote:applyVote,
+ vclr:()=>{const r=curRound();if(r!=null)delete ST.votes[r];['A','B','C'].forEach(x=>$('#v'+x).value='');$('#vmsg').textContent='';render()},pp:()=>$('#pp').classList.toggle('on'),
+ twist:()=>{ST.twist=true;go(1)}};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,v=+b.dataset.v;
+ if(a==='pick'){const r=curRound();if(r!=null)pick(r,v)}else if(a==='resp'){ST.resp=v;SFX.ok();render()}else if(ACT[a])ACT[a]();
+ if(scr()==='open'&&a==='next'){}});
+function adv(){const k=scr();if(k==='open'){const b=$('#o8');if(b&&b.classList.contains('show'))ACT.next();else skipIntro();return}
+ if(/^r\d/.test(k)||(k==='twist'&&ST.resp==null))return;ACT.next()}
+document.addEventListener('keydown',e=>{if(e.target.matches('input')||e.ctrlKey||e.metaKey||e.altKey)return;const k=e.key.toLowerCase();
+ if(k==='enter'){if(e.target.matches('button'))return;e.preventDefault();adv()}
+ else if(['1','2','3'].includes(k)){const v=+k-1,s=scr();if(/^r\d/.test(s))pick(+s[1],v);else if(s==='twist'){ST.resp=v;render()}}
+ else if(k==='p')ACT.pp();else if(k==='f')fs();else if(k==='m')ACT.snd();else if(k==='r')askRestart();
+ else if(k==='escape'){$('#pp').classList.remove('on');$('#cd').style.display='none'}
+ else if(k==='arrowright'&&!/^r\d/.test(scr()))ACT.next();else if(k==='arrowleft')go(-1)});
+setInterval(()=>{if(ST.t0){const s=Math.floor((Date.now()-ST.t0)/1000);$('#el').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}},1000);
+window.addEventListener('error',()=>{});
+render();
+</script></body></html>
